@@ -68,7 +68,7 @@ ROOT_URLCONF = 'fairbet_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, '../fairbet_react')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,6 +135,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../fairbet_react/build/static'),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, '../fairbet_react/build/static'),
+# ]
