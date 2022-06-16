@@ -6,6 +6,7 @@ django-rest-passwordreset
 djangorestframework
 djangorestframework-simplejwt
 whitenoise
+dj-database-url
 pandas
 django-utils-six
 phonenumbers
