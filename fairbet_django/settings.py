@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-s!cufe(@4ry&+pj_052^2d$^mq#%@+fdbb)1+yi65oe&(y@kj1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['fairbet.herokuapp.com','127.0.0.1']
 
