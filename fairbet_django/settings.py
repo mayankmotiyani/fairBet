@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     #libraries
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     #apps
     'fairbet_auth_app.apps.FairbetAppConfig',
 ]
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -82,6 +84,8 @@ TEMPLATES = [
         },
     },
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 WSGI_APPLICATION = 'fairbet_django.wsgi.application'
 
