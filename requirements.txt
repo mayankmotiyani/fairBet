@@ -1,4 +1,5 @@
 django
+django-cors-headers
 django-allauth
 django-pandas
 django-phonenumber-field
@@ -17,4 +18,5 @@ requests
 requests-oauthlib
 gunicorn
 virtualenv
+
 
