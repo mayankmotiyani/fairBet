@@ -56,7 +56,7 @@ def order_payment(request):
             request,
             "payment/payment.html",
             {
-                "callback_url": "http://" + "127.0.0.1:8000" + "/callback/",
+                "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
                 "razorpay_key": settings.RAZOR_KEY_ID,
                 "order": order,
             },
@@ -74,7 +74,6 @@ def callback(request):
         payment_id = request.POST.get("razorpay_payment_id", "")
         provider_order_id = request.POST.get("razorpay_order_id", "")
         signature_id = request.POST.get("razorpay_signature", "")
-        print(payment_id,provider_order_id,signature_id)
         order = Order.objects.get(provider_order_id=provider_order_id)
         order.payment_id = payment_id
         order.signature_id = signature_id
