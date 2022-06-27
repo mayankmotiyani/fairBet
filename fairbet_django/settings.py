@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'corsheaders',
     #apps
     'fairbet_auth_app.apps.FairbetAppConfig',
+    'payment.apps.PaymentConfig',
 ]
 
 MIDDLEWARE = [
@@ -132,7 +133,6 @@ USE_TZ = True
 TIME_ZONE = 'Asia/Kolkata'
 
 
-
 STATIC_ROOT = os.path.join(BASE_DIR,"staticfiles")
 STATIC_URL = '/static/'
 # STATICFILES_DIRS = [
@@ -140,8 +140,6 @@ STATIC_URL = '/static/'
 # ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
@@ -151,3 +149,8 @@ DATABASES['default'].update(db_from_env)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # django_heroku.settings(locals())
+
+#Credentials
+
+RAZOR_KEY_ID = "rzp_test_ky0MEBtdsuw185"
+RAZOR_KEY_SECRET = "AB3ichWvH6Y7z2MBKOL6aRj4"

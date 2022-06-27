@@ -18,5 +18,5 @@ requests
 requests-oauthlib
 gunicorn
 virtualenv
-
+razorpay
 
