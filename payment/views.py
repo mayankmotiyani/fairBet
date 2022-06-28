@@ -47,7 +47,7 @@ class RazorPayOrderForm(APIView):
 class CallbackView(APIView):
     def post(request, *args, **kwargs):
         try:
-            response = request.data
+            response = json.loads(request.data)
             if "razorpay_signature" in response:
                 data = razorpay_client.utility.verify_payment_signature(response)
                 if data:
