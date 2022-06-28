@@ -45,9 +45,11 @@ class RazorPayOrderForm(APIView):
 
 
 class CallbackView(APIView):
-    def post(request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         response = request.data
+        print(response)
         if "razorpay_signature" in response:
+            razorpay_client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
             data = razorpay_client.utility.verify_payment_signature(response)
             if data:
                 payment_object = Order.objects.get(provider_order_id = response['razorpay_order_id'])
