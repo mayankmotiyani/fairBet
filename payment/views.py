@@ -39,13 +39,6 @@ class RazorPayOrderForm(APIView):
             "currency" : 'INR' ,
             "orderId" : razorpay_order["id"],
         }
-        # serializer = OrderForm(order)
-        # context = {
-        #     "status":status.HTTP_200_OK,
-        #     "response":serializer.data,
-        #     "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
-        #     "razorpay_key": settings.RAZOR_KEY_ID,
-        # }
         return Response(data,status=status.HTTP_200_OK)
 
 
