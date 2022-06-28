@@ -23,10 +23,8 @@ def payment_home(request):
 
 class RazorPayOrderForm(APIView):
     def post(self, request, *args, **kwargs):
-        # name = request.data["name"]
-        # amount = request.data["amount"]
-        name = "Mayank"
-        amount = "400"
+        name = request.data["name"]
+        amount = request.data["amount"]
         client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
         razorpay_order = client.order.create(
             {"amount": int(amount) * 100, "currency": "INR", "payment_capture": "1"}
@@ -38,7 +36,7 @@ class RazorPayOrderForm(APIView):
             "name" : name,
             "merchantId": settings.RAZOR_KEY_ID,
             "amount": amount,
-            "currency" : 'INR' ,
+            "currency" : 'INR',
             "orderId" : razorpay_order["id"],
         }
         return Response(data,status=status.HTTP_200_OK)
