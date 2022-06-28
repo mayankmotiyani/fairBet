@@ -32,15 +32,21 @@ class RazorPayOrderForm(APIView):
         order = Order.objects.create(
             name=name, amount=amount, provider_order_id=razorpay_order["id"]
         )
-        order.save()
-        serializer = OrderForm(order)
-        context = {
-            "status":status.HTTP_200_OK,
-            "response":serializer.data,
-            "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
-            "razorpay_key": settings.RAZOR_KEY_ID,
+        data = {
+            "name" : name,
+            "merchantId": settings.RAZOR_KEY_ID,
+            "amount": amount,
+            "currency" : 'INR' ,
+            "orderId" : razorpay_order["id"],
         }
-        return Response(context,status=status.HTTP_200_OK)
+        # serializer = OrderForm(order)
+        # context = {
+        #     "status":status.HTTP_200_OK,
+        #     "response":serializer.data,
+        #     "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
+        #     "razorpay_key": settings.RAZOR_KEY_ID,
+        # }
+        return Response(data,status=status.HTTP_200_OK)
 
 
 class CallbackView(APIView):
@@ -93,7 +99,7 @@ def order_payment(request):
             request,
             "payment/payment.html",
             {
-                "callback_url": "http://" + "127.0.0.1:8000" + "/callback/",
+                "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
                 "razorpay_key": settings.RAZOR_KEY_ID,
                 "order": order,
             },
