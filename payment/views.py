@@ -46,36 +46,40 @@ class RazorPayOrderForm(APIView):
 
 class CallbackView(APIView):
     def post(request, *args, **kwargs):
-        response = request.data.dict()
-        if "razorpay_signature" in response:
-            data = razorpay_client.utility.verify_payment_signature(response)
-            if data:
-                payment_object = Order.objects.get(provider_order_id = response['razorpay_order_id'])
-                payment_object.payment_id = payment_id
-                payment_object.signature_id = signature_id
-                payment_object.status = PaymentStatus.SUCCESS
-                payment_object.save()
-                return Response({'status': 'Payment Done'}, status=status.HTTP_200_OK)
+        try:
+            response = request.data.dict()
+            if "razorpay_signature" in response:
+                data = razorpay_client.utility.verify_payment_signature(response)
+                if data:
+                    payment_object = Order.objects.get(provider_order_id = response['razorpay_order_id'])
+                    payment_object.payment_id = payment_id
+                    payment_object.signature_id = signature_id
+                    payment_object.status = PaymentStatus.SUCCESS
+                    payment_object.save()
+                    return Response({'status': 'Payment Done'}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'status': 'Signature Mismatch!'}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({'status': 'Signature Mismatch!'}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            error_code = response['error[code]']
-            error_description = response['error[description]']
-            error_source = response['error[source]']
-            error_reason = response['error[reason]']
-            error_metadata = json.loads(response['error[metadata]'])
-            razorpay_payment = Order.objects.get(provider_order_id=error_metadata['order_id'])
-            razorpay_payment.payment_id = error_metadata['payment_id']
-            razorpay_payment.signature_id = "None"
-            razorpay_payment.status = PaymentStatus.FAILURE
-            razorpay_payment.save()
-            error_status = {
-                'error_code': error_code,
-                'error_description': error_description,
-                'error_source': error_source,
-                'error_reason': error_reason,
-            }
-            return Response({'error_data': error_status}, status=status.HTTP_401_UNAUTHORIZED)
+                error_code = response['error[code]']
+                error_description = response['error[description]']
+                error_source = response['error[source]']
+                error_reason = response['error[reason]']
+                error_metadata = json.loads(response['error[metadata]'])
+                razorpay_payment = Order.objects.get(provider_order_id=error_metadata['order_id'])
+                razorpay_payment.payment_id = error_metadata['payment_id']
+                razorpay_payment.signature_id = "None"
+                razorpay_payment.status = PaymentStatus.FAILURE
+                razorpay_payment.save()
+                error_status = {
+                    'error_code': error_code,
+                    'error_description': error_description,
+                    'error_source': error_source,
+                    'error_reason': error_reason,
+                }
+                return Response({'error_data': error_status}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            context = {"data":request,"exception":str(e)}
+            return Response(context)
 
 
 def order_payment(request):
