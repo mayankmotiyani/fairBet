@@ -47,13 +47,13 @@ class RazorPayOrderForm(APIView):
 class CallbackView(APIView):
     def post(request, *args, **kwargs):
         try:
-            response = request.data.dict()
+            response = request.data
             if "razorpay_signature" in response:
                 data = razorpay_client.utility.verify_payment_signature(response)
                 if data:
                     payment_object = Order.objects.get(provider_order_id = response['razorpay_order_id'])
-                    payment_object.payment_id = payment_id
-                    payment_object.signature_id = signature_id
+                    payment_object.payment_id = response['razorpay_payment_id']
+                    payment_object.signature_id = response['razorpay_signature']
                     payment_object.status = PaymentStatus.SUCCESS
                     payment_object.save()
                     return Response({'status': 'Payment Done'}, status=status.HTTP_200_OK)
@@ -78,8 +78,7 @@ class CallbackView(APIView):
                 }
                 return Response({'error_data': error_status}, status=status.HTTP_401_UNAUTHORIZED)
         except Exception as e:
-            context = {"data":request,"exception":str(e)}
-            return Response(context)
+            return Response(str(e))
 
 
 def order_payment(request):
