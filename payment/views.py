@@ -36,32 +36,34 @@ class RazorPayOrderForm(APIView):
         serializer = OrderForm(order)
         context = {
             "status":status.HTTP_200_OK,
-            "response":serializer.data
+            "response":serializer.data,
+            "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
+            "razorpay_key": settings.RAZOR_KEY_ID,
         }
         return Response(context,status=status.HTTP_200_OK)
 
-def order_payment(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        amount = request.POST.get("amount")
-        client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
-        razorpay_order = client.order.create(
-            {"amount": int(amount) * 100, "currency": "INR", "payment_capture": "1"}
-        )
-        order = Order.objects.create(
-            name=name, amount=amount, provider_order_id=razorpay_order["id"]
-        )
-        order.save()
-        return render(
-            request,
-            "payment/payment.html",
-            {
-                "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
-                "razorpay_key": settings.RAZOR_KEY_ID,
-                "order": order,
-            },
-        )
-    return render(request, "payment.html")
+# def order_payment(request):
+#     if request.method == "POST":
+#         name = request.POST.get("name")
+#         amount = request.POST.get("amount")
+#         client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+#         razorpay_order = client.order.create(
+#             {"amount": int(amount) * 100, "currency": "INR", "payment_capture": "1"}
+#         )
+#         order = Order.objects.create(
+#             name=name, amount=amount, provider_order_id=razorpay_order["id"]
+#         )
+#         order.save()
+#         return render(
+#             request,
+#             "payment/payment.html",
+#             {
+#                 "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
+#                 "razorpay_key": settings.RAZOR_KEY_ID,
+#                 "order": order,
+#             },
+#         )
+#     return render(request, "payment.html")
 
 @csrf_exempt
 def callback(request):
