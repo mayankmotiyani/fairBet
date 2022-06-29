@@ -6,6 +6,12 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"
+    
+    def to_representation(self,obj):
+        instance = super(OrderSerializer,self).to_representation(obj)
+        instance['created'] = datetime.strptime(instance['created'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
+        instance['updated'] = datetime.strptime(instance['updated'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
+        return instance
 
 
 class WalletSerializer(serializers.ModelSerializer):
