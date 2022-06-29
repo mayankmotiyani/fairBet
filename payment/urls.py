@@ -7,7 +7,6 @@ from .views import (
     CallbackView, 
     WalletAPI
 )
-
 urlpatterns = [
     path('payment/',payment_home),
     path('order_payment/', order_payment, name="payment"),

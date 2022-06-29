@@ -203,4 +203,7 @@ class WalletAPI(APIView):
         except Exception as exception:
             return Response(str(exception))
 
-        
+
+class OrderHistory(APIView):
+    pass
+ 
