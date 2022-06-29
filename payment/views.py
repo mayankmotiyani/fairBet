@@ -8,7 +8,7 @@ from .models import Order
 from .constants import PaymentStatus
 import json
 from rest_framework.views import APIView
-from .serializers import OrderForm
+from .serializers import OrderSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -207,5 +207,21 @@ class WalletAPI(APIView):
 
 
 class OrderHistory(APIView):
-    pass
+    permission_classes = (IsAuthenticated,)
+    def get(self, request, *args, **kwargs):
+        token = request.META.get('HTTP_AUTHORIZATION', "").split(' ')[1]
+        try:
+            valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
+            get_logged_in_user = valid_data['user_id']
+            get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
+            get_logged_in_user_name = valid_data['username']
+            instance = Order.objects.filter(user_id=get_logged_in_user_profile.id)
+            serializer = OrderSerializer(instance,many=True)
+            return Response({"status":status.HTTP_200_OK,"data":serializer.data},status=status.HTTP_200_OK)
+        except Exception as exception:
+            context = {
+                "status":status.HTTP_400_BAD_REQUEST,
+                "exception":str(exception)
+            }
+            return Response(str(exception))
  
