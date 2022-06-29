@@ -78,7 +78,7 @@ class CallbackView(APIView):
     permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
         try:
-            token = request.META.get('HTTP_AUTHORIZATION', "").split(' ')[1] 
+            token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1] 
             valid_data = TokenBackend(algorithm='HS256').decode(token,verify=True)
             get_logged_in_user = valid_data['user_id']
             get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
@@ -100,13 +100,13 @@ class CallbackView(APIView):
                 payment_object.status = PaymentStatus.SUCCESS
                 payment_object.save()
                 """ Here We will create wallet instance after payment getting successfully """
-                if Wallet.objects.filter(user_id=get_logged_in_user_profile.id).exists():
-                    wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
-                    wallet_instance.amount+=payment_object.amount
-                    wallet_instance.save()
+                instance,created = Wallet.objects.get_or_create(user_id=get_logged_in_user_profile.id)
+                if not created:
+                    instance.amount += payment_object.amount
+                    instance.save()
                 else:
-                    wallet_instance = Wallet.objects.create(user_id=get_logged_in_user_profile.id,amount=payment_object.amount)
-                    wallet_instance.save()
+                    instance = Wallet.objects.create(user_id=get_logged_in_user_profile.id,amount=payment_object.amount)
+                    instance.save()
                 return Response({'status': 'Payment Done'}, status=status.HTTP_200_OK)
             else:
                 return Response({'status': 'Signature Mismatch!'}, status=status.HTTP_400_BAD_REQUEST)
