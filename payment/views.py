@@ -79,7 +79,7 @@ class CallbackView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1] 
-            valid_data = TokenBackend(algorithm='HS256').decode(token,verify=True)
+            valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
             get_logged_in_user = valid_data['user_id']
             get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
             get_logged_in_user_name = valid_data['username']
