@@ -11,6 +11,7 @@ class OrderSerializer(serializers.ModelSerializer):
         instance = super(OrderSerializer,self).to_representation(obj)
         instance['created'] = datetime.strptime(instance['created'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
         instance['updated'] = datetime.strptime(instance['updated'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
+        del instance['signature_id']
         return instance
 
 
