@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy as _
 from .constants import PaymentStatus
+from fairbet_auth_app.models import Profile
 # Create your models here.
 
 class Order(models.Model):
@@ -26,3 +27,11 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.id}-{self.name}-{self.status}"
+
+    
+class Wallet(models.Model):
+    user = models.ForeignKey(Profile,on_delete=models.CASCADE)
+    amount = models.FloatField(_("Balance"),default=0.0)
+
+    def __str__(self):
+        return f"{self.user.user.username}"

@@ -1,4 +1,4 @@
-from .models import Order
+from .models import Order, Wallet
 from rest_framework import serializers
 
 
