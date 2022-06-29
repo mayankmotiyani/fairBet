@@ -86,7 +86,8 @@ class CallbackView(APIView):
         except Exception as exception:
             context = {
                 "status":status.HTTP_401_UNAUTHORIZED,
-                "response":"Given token not valid for any token type"
+                "response":"Given token not valid for any token type",
+                "exception":str(exception)
             }
             return Response(context,status = status.HTTP_401_UNAUTHORIZED)
         response = request.data
