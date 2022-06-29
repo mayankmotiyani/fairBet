@@ -6,6 +6,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"
+        depth = True
     
     def to_representation(self,obj):
         instance = super(OrderSerializer,self).to_representation(obj)
@@ -20,7 +21,7 @@ class WalletSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wallet
         fields = ['user','wallet_balance']
-        depth = 1
+        depth = True
 
 
     def get_wallet_balance(self,obj):
