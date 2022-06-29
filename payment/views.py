@@ -215,7 +215,7 @@ class OrderHistory(APIView):
             get_logged_in_user = valid_data['user_id']
             get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
             get_logged_in_user_name = valid_data['username']
-            instance = Order.objects.filter(user_id=get_logged_in_user_profile.id)
+            instance = Order.objects.filter(user_id=get_logged_in_user_profile.id,status="Success")
             serializer = OrderSerializer(instance,many=True)
             return Response({"status":status.HTTP_200_OK,"data":serializer.data},status=status.HTTP_200_OK)
         except Exception as exception:
