@@ -29,7 +29,7 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True,null=True)
 
     def __str__(self):
-        return f"{self.id}-{self.user.username}-{self.status}"
+        return f"{self.id}-{self.status}"
 
     
 class Wallet(models.Model):
