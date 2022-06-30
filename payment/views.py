@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.backends import TokenBackend
 from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 from .models import (
     Wallet,
     )
@@ -25,20 +26,7 @@ from fairbet_auth_app.models import (
     Profile
 )
 
-load_dotenv(find_dotenv())
 
-
-
-# Create your views here.
-def payment_home(request):
-    return render(request, 'payment/index.html')
-
-# def verify_signature(response_data):
-#         client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
-#         print(client.utility.verify_payment_signature(response_data))
-#         return client.utility.verify_payment_signature(response_data)
-
-#for production
 class RazorPayOrderForm(APIView):
     permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
@@ -129,65 +117,6 @@ class CallbackView(APIView):
                 'error_reason': error_reason,
             }
             return Response({'error_data': error_status}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-
-# for local
-def order_payment(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        amount = request.POST.get("amount")
-        client = razorpay.Client(auth=(os.environ['RAZOR_KEY_ID'], os.environ['RAZOR_KEY_SECRET']))
-        razorpay_order = client.order.create(
-            {"amount": int(amount) * 100, "currency": "INR", "payment_capture": "1"}
-        )
-        order = Order.objects.create(
-            name=name, amount=amount, provider_order_id=razorpay_order["id"]
-        )
-        order.save()
-        return render(
-            request,
-            "payment/payment.html",
-            {
-                "callback_url": "https://" + "fairbet.herokuapp.com" + "/callback/",
-                "razorpay_key": os.environ['RAZOR_KEY_ID'],
-                "order": order,
-            },
-        )
-    return render(request, "payment.html")
-
-@csrf_exempt
-def callback(request):
-    def verify_signature(response_data):
-        client = razorpay.Client(auth=(os.environ['RAZOR_KEY_ID'], os.environ['RAZOR_KEY_SECRET']))
-        print(client.utility.verify_payment_signature(response_data))
-        return client.utility.verify_payment_signature(response_data)
-    if "razorpay_signature" in request.POST:
-        payment_id = request.POST.get("razorpay_payment_id", "")
-        provider_order_id = request.POST.get("razorpay_order_id", "")
-        signature_id = request.POST.get("razorpay_signature", "")
-        order = Order.objects.get(provider_order_id=provider_order_id)
-        order.payment_id = payment_id
-        order.signature_id = signature_id
-        order.save()
-        if verify_signature(request.POST):
-            order.status = PaymentStatus.SUCCESS
-            order.save()
-            return render(request, "payment/callback.html", context={"status": order.status})
-        else:
-            order.status = PaymentStatus.FAILURE
-            order.save()
-            return render(request, "payment/callback.html", context={"status": order.status})
-    else:
-        payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
-        provider_order_id = json.loads(request.POST.get("error[metadata]")).get(
-            "order_id"
-        )
-        order = Order.objects.get(provider_order_id=provider_order_id)
-        order.payment_id = payment_id
-        order.status = PaymentStatus.FAILURE
-        order.save()
-        return render(request, "payment/callback.html", context={"status": order.status})
 
 
 class WalletAPI(APIView):
