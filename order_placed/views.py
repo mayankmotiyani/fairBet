@@ -25,6 +25,9 @@ class BettingOrderAPI(APIView):
             get_logged_in_user = valid_data['user_id']
             get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
             get_logged_in_user_name = valid_data['username']
+            print(get_logged_in_user)
+            print(get_logged_in_user_profile.id)
+            print(get_logged_in_user_name)
         except Exception as exception:
             context = {
                 "status":status.HTTP_401_UNAUTHORIZED,
@@ -35,14 +38,14 @@ class BettingOrderAPI(APIView):
         get_json = request.data['bet_json']
         get_json = json.loads(get_json)
         get_json['user'] = get_logged_in_user_profile.id
-        betting_instance = [Betting(
-            user_id = int(value['user']),
-            amount = value['placeAmount'],
-            bet_on_team = value['betOnTeam'],
-            status = value['orderStatus'],
-            odds = value['Odds'],
-            )for key,value in get_json.items()]
-        Betting.objects.bulk_update_or_create(betting_instance,['user','amount','bet_on_team','status','odds'])
+        betting_instance = Betting.objects.create(
+            user_id = get_json['user'],
+            amount = get_json['placeAmount'],
+            bet_on_team = get_json['betOnTeam'],
+            status = get_json['orderStatus'],
+            odds = get_json['Odds'],
+        )
+        betting_instance.save()
         context = {
             "status":status.HTTP_201_CREATED,
             "response":"Successfully Placed Order"
