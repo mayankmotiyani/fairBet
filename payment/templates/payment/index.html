@@ -57,7 +57,7 @@
 </head>
 <body>
 	<div class="col-6 mx-auto" style="margin-top:10%;">
-    <form action="{% url 'payment' %}" method='POST'>
+    <form method='POST'>
         {% csrf_token %}
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">Name</label>
@@ -72,5 +72,32 @@
         </div>
     </form>
 </div>
+{% comment %} <script>
+let socket = new WebSocket("ws://148.251.21.118:5570");
+
+socket.onopen = function(e) {
+  alert("[open] Connection established");
+  alert("Sending to server");
+  socket.send("My name is John");
+};
+
+socket.onmessage = function(event) {
+  console.log(`[message] Data received from server: ${event.data}`);
+};
+
+socket.onclose = function(event) {
+  if (event.wasClean) {
+    alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+  } else {
+    // e.g. server process killed or network down
+    // event.code is usually 1006 in this case
+    alert('[close] Connection died');
+  }
+};
+
+socket.onerror = function(error) {
+  alert(`[error] ${error.message}`);
+};
+</script> {% endcomment %}
 </body>
 </html>

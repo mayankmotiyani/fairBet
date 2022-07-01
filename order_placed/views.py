@@ -36,7 +36,7 @@ class BettingOrderAPI(APIView):
         get_json = json.loads(get_json)
         get_json['user'] = get_logged_in_user_profile.id
         betting_instance = [Betting(
-            user_id = value['user'],
+            user_id = int(value['user']),
             amount = value['placeAmount'],
             bet_on_team = value['betOnTeam'],
             status = value['orderStatus'],

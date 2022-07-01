@@ -27,6 +27,9 @@ from fairbet_auth_app.models import (
 )
 
 
+def home(request):
+    return render(request, 'payment/index.html')
+
 class RazorPayOrderForm(APIView):
     permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
