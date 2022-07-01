@@ -11,7 +11,7 @@ from fairbet_auth_app.models import (
 from .models import (
     Betting
 )
-from serializers import (
+from .serializers import (
     BettingSerializer
 )
 
