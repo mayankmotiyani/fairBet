@@ -168,14 +168,12 @@ class OrderHistory(APIView):
 class RandomODDS(APIView):
     def get(self, request, *args, **kwargs):
         random_df = {}
-        random_list = []
-        random_df['team1Back'] = "{:.2f}".format(random.uniform(1.0,3.0))
-        random_df['team1Lay'] = "{:.2f}".format(random.uniform(1.0,3.0))
-        random_df['team2Back'] = "{:.2f}".format(random.uniform(1.0,3.0))
-        random_df['team2Lay'] = "{:.2f}".format(random.uniform(1.0,3.0))
-        random_list.append(random_df)
+        random_df['team1Back'] = float("{:.2f}".format(random.uniform(1.0,3.0)))
+        random_df['team1Lay'] = float("{:.2f}".format(random.uniform(1.0,3.0)))
+        random_df['team2Back'] = float("{:.2f}".format(random.uniform(1.0,3.0)))
+        random_df['team2Lay'] = float("{:.2f}".format(random.uniform(1.0,3.0)))
         context = {
             "status":status.HTTP_200_OK,
-            "response":random_list
+            "response":random_df
         }
         return Response(context,status=status.HTTP_200_OK)
