@@ -23,8 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path("",include("fairbet_auth_app.urls")),
     path("api-auth/",include("fairbet_auth_app.auth_api.api_urls")),
+    path('order/',include("order_placed.urls")),
     path('',include("payment.urls"))
-
 ]
 
 # urlpatterns = [
