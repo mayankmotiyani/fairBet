@@ -20,3 +20,4 @@ gunicorn
 virtualenv
 razorpay
 python-dotenv
+django-bulk-update-or-create

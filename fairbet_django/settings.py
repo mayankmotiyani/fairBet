@@ -34,7 +34,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['fairbet.herokuapp.com','127.0.0.1']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -52,6 +51,7 @@ INSTALLED_APPS = [
     #apps
     'fairbet_auth_app.apps.FairbetAppConfig',
     'payment.apps.PaymentConfig',
+    'order_placed.apps.OrderPlacedConfig',
 ]
 
 MIDDLEWARE = [

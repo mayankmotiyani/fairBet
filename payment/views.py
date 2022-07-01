@@ -132,7 +132,11 @@ class WalletAPI(APIView):
             serializer = WalletSerializer(instance)
             return Response({"status":status.HTTP_200_OK,"data":serializer.data},status=status.HTTP_200_OK)
         except Exception as exception:
-            return Response(str(exception))
+            context = {
+                "status":status.HTTP_400_BAD_REQUEST,
+                "response": str(exception)
+            }
+            return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderHistory(APIView):
@@ -150,7 +154,7 @@ class OrderHistory(APIView):
         except Exception as exception:
             context = {
                 "status":status.HTTP_400_BAD_REQUEST,
-                "exception":str(exception)
+                "response": str(exception)
             }
-            return Response(str(exception))
+            return Response(context,status=status.HTTP_400_BAD_REQUEST)
  
