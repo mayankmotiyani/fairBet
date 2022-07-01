@@ -53,15 +53,28 @@ class BettingOrderAPI(APIView):
         return Response(context,status = status.HTTP_201_CREATED)
 
 
-
-
-
-        
-
-
-
     def get(self, request, *args, **kwargs):
-        pass
+        try:
+            token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
+            valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
+            get_logged_in_user = valid_data['user_id']
+            get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
+            get_logged_in_user_name = valid_data['username']
+        except Exception as exception:
+            context = {
+                "status":status.HTTP_401_UNAUTHORIZED,
+                "response":"Given token not valid for any token type",
+                "exception":str(exception)
+            }
+            return Response(context,status = status.HTTP_401_UNAUTHORIZED)
+        betting_instance = Betting.objects.filter(user_id=get_logged_in_user_profile.id)
+        serializer = BettingSerializer(betting_instance,many=True)
+        context = {
+            "status" : status.HTTP_200_OK,
+            "response":serializer.data
+        }
+        return Response(context,status = status.HTTP_200_OK)
+        
 
 
  # user_service_instance = [UserServiceBooking(
