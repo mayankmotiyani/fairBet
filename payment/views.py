@@ -1,4 +1,5 @@
 import os
+import random
 from django.shortcuts import render
 import razorpay
 from django.conf import settings
@@ -15,6 +16,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.backends import TokenBackend
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
+import pandas as pd
+import numpy as np
 from .models import (
     Wallet,
     )
@@ -161,3 +164,18 @@ class OrderHistory(APIView):
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
  
+
+class RandomODDS(APIView):
+    def get(self, request, *args, **kwargs):
+        random_df = {}
+        random_list = []
+        random_df['team1Back'] = "{:.2f}".format(random.uniform(1.0,3.0))
+        random_df['team1Lay'] = "{:.2f}".format(random.uniform(1.0,3.0))
+        random_df['team2Back'] = "{:.2f}".format(random.uniform(1.0,3.0))
+        random_df['team2Lay'] = "{:.2f}".format(random.uniform(1.0,3.0))
+        random_list.append(random_df)
+        context = {
+            "status":status.HTTP_200_OK,
+            "response":random_list
+        }
+        return Response(context,status=status.HTTP_200_OK)
