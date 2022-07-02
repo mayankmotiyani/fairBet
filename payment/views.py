@@ -156,7 +156,7 @@ class OrderHistory(APIView):
             get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
             get_logged_in_user_name = valid_data['username']
             get_json = request.data
-            instance = Order.objects.filter(user_id=get_logged_in_user_profile.id,created__date__gte=get_json['from'],created__date__lte=get_json['to'],status=get_json['payment_status'])
+            instance = Order.objects.filter(user_id=get_logged_in_user_profile.id,created__date__lte=get_json['from'],created__date__gte=get_json['to'],status=get_json['payment_status'])
             serializer = OrderSerializer(instance,many=True)
             return Response({"status":status.HTTP_200_OK,"data":serializer.data},status=status.HTTP_200_OK)
         except Exception as exception:
