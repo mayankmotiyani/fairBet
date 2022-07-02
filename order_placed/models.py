@@ -26,6 +26,8 @@ class Betting(models.Model):
         _('winningTeam'),max_length=100,null=True,blank=True,default="Not declared yet")
     loss_profit = models.FloatField(
         _('lossProfit'),null=True,default=0.0)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
 
     
     # def __str__(self):

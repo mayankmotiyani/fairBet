@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy as _
-from .constants import PaymentStatus
+from .constants import PaymentStatus, TransactionStatus
 from fairbet_auth_app.models import Profile
 # Create your models here.
 
@@ -24,7 +24,7 @@ class Order(models.Model):
     signature_id = models.CharField(
         _("Signature ID"), max_length=128, null=False, blank=False
     )
-
+    transaction_status = models.CharField(_('transactionStatus'),max_length=100,null=True,blank=True)
     created = models.DateTimeField(auto_now_add=True,null=True)
     updated = models.DateTimeField(auto_now=True,null=True)
 
@@ -35,6 +35,8 @@ class Order(models.Model):
 class Wallet(models.Model):
     user = models.ForeignKey(Profile,on_delete=models.CASCADE)
     amount = models.FloatField(_("Balance"),default=0.0)
+    created = models.DateTimeField(auto_now_add=True,null=True)
+    updated = models.DateTimeField(auto_now=True,null=True)
 
     def __str__(self):
         return f"{self.user.user.username}"

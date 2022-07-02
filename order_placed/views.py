@@ -15,6 +15,10 @@ from .serializers import (
     BettingSerializer
 )
 
+from payment.models import (
+    Wallet
+)
+
 # Create your views here.
 
 
@@ -49,9 +53,13 @@ class BettingOrderAPI(APIView):
             odds = get_json['Odds'],
         )
         betting_instance.save()
+        """ taking wallet instance """
+        wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
+        wallet_instance.amount -= betting_instance.amount
+        wallet_instance.save()
         context = {
             "status":status.HTTP_201_CREATED,
-            "response":"Successfully Placed Order"
+            "response":"Successfully Placed Order and Wallet Updated!"
         }
         return Response(context,status = status.HTTP_201_CREATED)
 

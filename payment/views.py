@@ -6,7 +6,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseBadRequest, JsonResponse
 from .models import Order
-from .constants import PaymentStatus
+from .constants import PaymentStatus, TransactionStatus
 import json
 from rest_framework.views import APIView
 from .serializers import OrderSerializer
@@ -93,6 +93,7 @@ class CallbackView(APIView):
                 payment_object.payment_id = response['razorpay_payment_id']
                 payment_object.signature_id = response['razorpay_signature']
                 payment_object.status = PaymentStatus.SUCCESS
+                payment_object.transaction_status = TransactionStatus.B_TO_W
                 payment_object.save()
                 """ Here We will create wallet instance after payment getting successfully """
                 instance,created = Wallet.objects.get_or_create(user_id=get_logged_in_user_profile.id)
@@ -154,7 +155,8 @@ class OrderHistory(APIView):
             get_logged_in_user = valid_data['user_id']
             get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
             get_logged_in_user_name = valid_data['username']
-            instance = Order.objects.filter(user_id=get_logged_in_user_profile.id,status="Success")
+            get_json = request.data
+            instance = Order.objects.filter(user_id=get_logged_in_user_profile.id,created__date__gte=get_json['from'],created__date__lte=get_json['to'],status=get_json['payment_status'])
             serializer = OrderSerializer(instance,many=True)
             return Response({"status":status.HTTP_200_OK,"data":serializer.data},status=status.HTTP_200_OK)
         except Exception as exception:
