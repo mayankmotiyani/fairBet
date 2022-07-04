@@ -48,10 +48,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'django_extensions',
     #apps
     'fairbet_auth_app.apps.FairbetAppConfig',
     'payment.apps.PaymentConfig',
     'order_placed.apps.OrderPlacedConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -188,3 +190,10 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),   #update here for acess token
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1), # update here for refresh token
 }
+
+
+# NOTEBOOK_ARGUMENTS = [
+#     '--ip', '0.0.0.0',
+#     '--port', '8888',
+# ]
+# IPYTHON_KERNEL_DISPLAY_NAME = 'Django Kernel'
