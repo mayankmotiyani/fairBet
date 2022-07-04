@@ -28,6 +28,9 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True,null=True)
     updated = models.DateTimeField(auto_now=True,null=True)
 
+    class Meta:
+        ordering = ['created']
+
     def __str__(self):
         return f"{self.id}-{self.status}"
 
@@ -37,6 +40,9 @@ class Wallet(models.Model):
     amount = models.FloatField(_("Balance"),default=0.0)
     created = models.DateTimeField(auto_now_add=True,null=True)
     updated = models.DateTimeField(auto_now=True,null=True)
+
+    class Meta:
+        ordering = ['created']
 
     def __str__(self):
         return f"{self.user.user.username}"

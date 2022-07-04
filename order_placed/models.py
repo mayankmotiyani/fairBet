@@ -30,9 +30,8 @@ class Betting(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,null=True)
 
-    
-    # def __str__(self):
-    #     return 'user:{}, placedAmount:{}, Status:{}, Odds:{}, winningTeam:{}, lossProfit{}'.format(self.user,self.amount,self.bet_on_team,self.odds,self.winning_team,self.loss_profilt,)
+    class Meta:
+        ordering = ['created_at']
     
     
 
