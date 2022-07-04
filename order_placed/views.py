@@ -51,6 +51,7 @@ class BettingOrderAPI(APIView):
             bet_on_team = get_json['betOnTeam'],
             status = get_json['orderStatus'],
             odds = get_json['Odds'],
+            match = get_json['liveMatch']
         )
         betting_instance.save()
         """ taking wallet instance """
