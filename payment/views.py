@@ -15,6 +15,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.backends import TokenBackend
 from dotenv import load_dotenv, find_dotenv
+from django.db.models import F, Q, When, Value, Case, Sum
+from django.db.models.functions import Concat
 load_dotenv(find_dotenv())
 import pandas as pd
 import numpy as np
@@ -24,14 +26,16 @@ from .models import (
 from .serializers import (
     WalletSerializer
     )
-
 from fairbet_auth_app.models import (
     Profile
+)
+from order_placed.models import (
+    Betting
 )
 
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'payment/index.html')
 
 class RazorPayOrderForm(APIView):
     permission_classes = (IsAuthenticated,)
@@ -39,7 +43,6 @@ class RazorPayOrderForm(APIView):
         try:
             token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
             valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
-            print(valid_data)
             get_logged_in_user = valid_data['user_id']
             get_logged_in_user_profile = Profile.objects.get(user_id=get_logged_in_user)
             get_logged_in_user_name = valid_data['username']
@@ -96,9 +99,9 @@ class CallbackView(APIView):
                 payment_object.transaction_status = TransactionStatus.B_TO_W
                 payment_object.save()
                 """ Here We will create wallet instance after payment getting successfully """
-                instance,created = Wallet.objects.get_or_create(user_id=get_logged_in_user_profile.id)
-                if not created:
-                    instance.amount += payment_object.amount
+                if Wallet.objects.filter(user_id=get_logged_in_user_profile.id).exist():
+                    wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
+                    wallet_instance.amount += payment_object.amount
                     instance.save()
                 else:
                     instance = Wallet.objects.create(user_id=get_logged_in_user_profile.id,amount=payment_object.amount)

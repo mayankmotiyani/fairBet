@@ -1,0 +1,8 @@
+# F object:
+F objects is used to calculate any value without pulling or retrieving the data from database
+
+# Q object:
+Q objects is used to encapsulate keyword like &,|. so we can use multiple queries on Q objects
+
+""" annotate"""
+profiles = Profile.objects.annotate(new_gender = Concat(F("gender"), Value(" "), F("gender")))

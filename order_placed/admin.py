@@ -6,6 +6,6 @@ from .models import (
 
 class BettingAdmin(admin.ModelAdmin):
     model = Betting
-    list_display = ["id","user","amount","odds","status","bet_on_team","winning_team","match","loss_profit","created_at"]
+    list_display = ["id","user","amount","odds","status","bet_on_team","winning_team","match","loss_profit","created_at","updated_at"]
     
 admin.site.register(Betting, BettingAdmin)
