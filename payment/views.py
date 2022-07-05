@@ -102,7 +102,7 @@ class CallbackView(APIView):
                 if Wallet.objects.filter(user_id=get_logged_in_user_profile.id).exists():
                     wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
                     wallet_instance.amount += payment_object.amount
-                    instance.save()
+                    wallet_instance.save()
                 else:
                     instance = Wallet.objects.create(user_id=get_logged_in_user_profile.id,amount=payment_object.amount)
                     instance.save()
