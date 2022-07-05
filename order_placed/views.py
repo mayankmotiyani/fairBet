@@ -47,12 +47,18 @@ class BettingOrderAPI(APIView):
         get_json = json.loads(get_json)
         """ here we will check your wallet balance """
         try:
+            if get_json['placeAmount'] <= 0:
+                context = {
+                    "status":status.HTTP_400_BAD_REQUEST,
+                    "response":"stake should not be less than zero"
+                }
+                return Response(context,status=status.HTTP_400_BAD_REQUEST)
             wallet_instance = get_object_or_404(Wallet,user_id=get_logged_in_user_profile.id)
             get_wallet_amount = wallet_instance.amount
             if get_json['placeAmount'] > get_wallet_amount and get_json['placeAmount'] != get_wallet_amount:
                 context = {
                     "status":status.HTTP_400_BAD_REQUEST,
-                    "data":"Insufficient credit limit"
+                    "response":"Insufficient credit limit"
                 }
                 return Response(context,status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -78,7 +84,7 @@ class BettingOrderAPI(APIView):
         except Exception as exception:
             context = {
                 "status":status.HTTP_400_BAD_REQUEST,
-                "data":str(exception)
+                "response":str(exception)
             }
             return Response(context,status = status.HTTP_400_BAD_REQUEST)
 
@@ -104,16 +110,3 @@ class BettingOrderAPI(APIView):
         }
         return Response(context,status = status.HTTP_200_OK)
         
-
-
- # user_service_instance = [UserServiceBooking(
-#     User_ID_id = user_id,
-#     Vendor_ID_id = value['Vendor ID'],
-#     service_Class = value['Service_Class'],
-#     Service_Name = value['Service_Name'],
-#     Service_Price = value['Price'],
-#     Start_Time = value['StartTime'],
-#     End_Time = value['EndTime'],
-#     Booking_Status = 'Service Booked',
-#     ) for key,value in df_dict.items()]
-# UserServiceBooking.objects.bulk_update_or_create(user_service_instance,['User_ID_id','Vendor_ID_id','service_Class','Service_Name','Service_Price','Start_Time','End_Time','Booking_Status'],match_field=['User_ID_id','Vendor_ID_id','Service_Name','Service_Price','Start_Time','End_Time','Booking_Status'])
