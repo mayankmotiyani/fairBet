@@ -99,7 +99,7 @@ class CallbackView(APIView):
                 payment_object.transaction_status = TransactionStatus.B_TO_W
                 payment_object.save()
                 """ Here We will create wallet instance after payment getting successfully """
-                if Wallet.objects.filter(user_id=get_logged_in_user_profile.id).exist():
+                if Wallet.objects.filter(user_id=get_logged_in_user_profile.id).exists():
                     wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
                     wallet_instance.amount += payment_object.amount
                     instance.save()
