@@ -35,5 +35,8 @@ def handle_all_bettings(matchName,winningTeam):
             default=F("loss_profit")
             )
         )
+    
+    
+
 
 

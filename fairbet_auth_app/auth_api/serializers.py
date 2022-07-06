@@ -10,6 +10,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
+from payment.models import (
+    Wallet
+)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -23,18 +26,27 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         email = attrs.get("email", None)
         password = attrs.get("password", None)
-        user_instance = get_object_or_404(User,email=email)
+        try:
+            user_instance = User.objects.get(email__iexact=email)
+        except Exception as exception:
+            data = dict()
+            data['status'] = status.HTTP_401_UNAUTHORIZED
+            data['response'] = "Incorrect Email!"
+            return data
         user = authenticate(username=user_instance.username, password=password)
         if user is not None:
             refresh = self.get_token(user)
             data = dict()
+            data['status'] = status.HTTP_200_OK
             data['refresh'] = str(refresh)
             data['access'] = str(refresh.access_token)
             return data
         elif user is None:
-            raise serializers.ValidationError(
-            detail="Incorrect Email or Password.", code=status.HTTP_401_UNAUTHORIZED
-        ) 
+            data = dict()
+            data['status'] = status.HTTP_401_UNAUTHORIZED
+            data['response'] = "Incorrect Password!"
+            return data
+            
             
     @classmethod
     def get_token(cls, user):
@@ -86,4 +98,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             source = validated_data['source'],
         )
         profile.save()
+        wallet_instance = Wallet.objects.create(user=user)
+        wallet_instance.save()
         return user

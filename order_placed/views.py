@@ -64,10 +64,10 @@ class BettingOrderAPI(APIView):
                     match = get_json['liveMatch']
                 )
                 betting_instance.save()
-                """ taking wallet instance """
-                wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
-                wallet_instance.amount -= betting_instance.amount
-                wallet_instance.save()
+                # """ taking wallet instance """
+                # wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
+                # wallet_instance.amount -= betting_instance.amount
+                # wallet_instance.save()
                 context = {
                     "status":status.HTTP_201_CREATED,
                     "response":"Successfully Placed Order!"
