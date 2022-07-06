@@ -53,14 +53,6 @@ class BettingOrderAPI(APIView):
                     "response":"stake should not be less than zero"
                 }
                 return Response(context,status=status.HTTP_400_BAD_REQUEST)
-            wallet_instance = get_object_or_404(Wallet,user_id=get_logged_in_user_profile.id)
-            get_wallet_amount = wallet_instance.amount
-            if get_json['placeAmount'] > get_wallet_amount and get_json['placeAmount'] != get_wallet_amount:
-                context = {
-                    "status":status.HTTP_400_BAD_REQUEST,
-                    "response":"Insufficient credit limit"
-                }
-                return Response(context,status=status.HTTP_400_BAD_REQUEST)
             else:
                 get_json['user'] = get_logged_in_user_profile.id
                 betting_instance = Betting.objects.create(
@@ -78,7 +70,7 @@ class BettingOrderAPI(APIView):
                 wallet_instance.save()
                 context = {
                     "status":status.HTTP_201_CREATED,
-                    "response":"Successfully Placed Order and Wallet Updated!"
+                    "response":"Successfully Placed Order!"
                 }
                 return Response(context,status = status.HTTP_201_CREATED)
         except Exception as exception:
