@@ -5,9 +5,18 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from fairbet_auth_app.models import Profile
 from django.contrib.auth import get_user_model
+from rest_framework import status
+from rest_framework.response import Response
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    
+
     @classmethod
     def get_token(cls, user):
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
@@ -29,7 +38,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
-    mobile_number = serializers.CharField(write_only=True, required=True)
+    mobile_number = serializers.CharField(write_only=True, required=True,validators=[UniqueValidator(queryset=Profile.objects.all())])
     birth_date = serializers.DateField(write_only=True, required=True)
     gender = serializers.CharField(write_only=True, required=True)
     source = serializers.CharField(write_only=True, required=True)
@@ -41,6 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
+        print("Hello")
         return attrs
 
     def create(self, validated_data):
