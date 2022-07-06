@@ -7,6 +7,11 @@ from fairbet_auth_app.models import Profile
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework_simplejwt.serializers import TokenObtainSerializer
+from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
+
+# from fairbet_auth_app.models import CustomUser 
 
 
 
@@ -16,14 +21,37 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = User.EMAIL_FIELD
+
+    def validate(self, attrs):
+        email = attrs.get("email", None)
+        password = attrs.get("password", None)
+        user_instance = get_object_or_404(User,email=email)
+        user = authenticate(username=user_instance.username, password=password)
+        if user is not None:
+            refresh = self.get_token(user)
+            data = dict()
+            data['refresh'] = str(refresh)
+            data['access'] = str(refresh.access_token)
+            return data
+        elif user is None:
+            raise serializers.ValidationError(
+            detail="Incorrect Email or Password.", code=status.HTTP_401_UNAUTHORIZED
+        ) 
+            
+
+
 
     @classmethod
     def get_token(cls, user):
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
+        print(user)
 
         # Add custom claims
         token['username'] = user.username
         return token
+    
+    
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
