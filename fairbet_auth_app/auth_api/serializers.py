@@ -11,9 +11,6 @@ from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 
-# from fairbet_auth_app.models import CustomUser 
-
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,15 +36,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             detail="Incorrect Email or Password.", code=status.HTTP_401_UNAUTHORIZED
         ) 
             
-
-
-
     @classmethod
     def get_token(cls, user):
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
-        print(user)
-
-        # Add custom claims
         token['username'] = user.username
         return token
     
@@ -78,7 +69,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
-        print("Hello")
         return attrs
 
     def create(self, validated_data):
