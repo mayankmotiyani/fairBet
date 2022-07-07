@@ -23,4 +23,3 @@ razorpay
 python-dotenv
 django-bulk-update-or-create
 django-extensions
-django-admin-interface
