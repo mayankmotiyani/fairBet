@@ -36,7 +36,7 @@ class Order(models.Model):
 
     
 class Wallet(models.Model):
-    user = models.ForeignKey(Profile,on_delete=models.CASCADE,null=True)
+    user = models.OneToOneField(Profile,on_delete=models.CASCADE,null=True)
     amount = models.FloatField(_("Balance"),default=0.0)
     created = models.DateTimeField(auto_now_add=True,null=True)
     updated = models.DateTimeField(auto_now=True,null=True)
