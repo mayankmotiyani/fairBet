@@ -36,6 +36,11 @@ def handle_all_bettings(matchName,winningTeam):
             )
         )
     
+    df = read_frame(Betting.objects.filter(match=matchName,winning_team=winningTeam).values("user__id","user_id","user_id__wallet__amount").annotate(loss_or_profit = Sum("loss_profit")))
+    df['total'] = df['user_id__wallet__amount'] + df['loss_or_profit']
+    
+
+    
     
 
 

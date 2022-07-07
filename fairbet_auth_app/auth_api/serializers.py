@@ -31,7 +31,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         except Exception as exception:
             data = dict()
             data['status'] = status.HTTP_401_UNAUTHORIZED
-            data['response'] = "Incorrect Email!"
+            data['response'] = "User is not exists.Please Register first!"
             return data
         user = authenticate(username=user_instance.username, password=password)
         if user is not None:

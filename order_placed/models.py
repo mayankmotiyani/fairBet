@@ -13,7 +13,7 @@ class Betting(models.Model):
         ('B','BACK'),
         ('L','LAY')
     )
-    user = models.ForeignKey(Profile,on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile,on_delete=models.CASCADE,null=True)
     amount = models.FloatField(
         _('placedAmount'))
     bet_on_team = models.CharField(
