@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.backends import TokenBackend
 from dotenv import load_dotenv, find_dotenv
-from django.db.models import F, Q, When, Value, Case, Sum
+from django.db.models import F, Q, When, Value, Case, Sum, OuterRef, Subquery
 from django.db.models.functions import Concat
 load_dotenv(find_dotenv())
 import pandas as pd
