@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 from django_pandas.io import read_frame
 from .models import Betting
-from django.db.models import F, Q, When, Value, Case
+from django.db.models import F, Q, When, Value, Case, Sum
+from payment.models import Wallet
 
-def handle_all_bettings(matchName,winningTeam):
+def handle_all_betting_(matchName,winningTeam):
     """ will filter according to match_name and Case When Conditional Statement """
 
     betting_instance = Betting.objects.filter(
@@ -38,6 +39,12 @@ def handle_all_bettings(matchName,winningTeam):
     
     df = read_frame(Betting.objects.filter(match=matchName,winning_team=winningTeam).values("user__id","user_id","user_id__wallet__amount").annotate(loss_or_profit = Sum("loss_profit")))
     df['total'] = df['user_id__wallet__amount'] + df['loss_or_profit']
+    wallet_dict = df.transpose().to_dict()
+    update_wallet_instance = [Wallet(
+        user_id = value.get("user__id",""),
+        amount = value.get("total",""),
+        ) for key,value in wallet_dict.items()]
+    Wallet.objects.bulk_update_or_create(update_wallet_instance,['user_id','amount'],match_field=['user_id'])
     
 
     

@@ -33,8 +33,11 @@ from order_placed.models import (
     Betting
 )
 
+from order_placed.helpers import handle_all_betting_
+
 
 def home(request):
+    # handle_all_betting_("England vs India","England")
     return render(request, 'payment/index.html')
 
 class RazorPayOrderForm(APIView):

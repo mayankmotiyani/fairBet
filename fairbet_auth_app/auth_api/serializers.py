@@ -98,6 +98,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             source = validated_data['source'],
         )
         profile.save()
-        wallet_instance = Wallet.objects.create(user=user)
+        wallet_instance = Wallet.objects.create(user=profile)
         wallet_instance.save()
         return user

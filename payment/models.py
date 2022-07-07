@@ -3,6 +3,7 @@ from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy as _
 from .constants import PaymentStatus, TransactionStatus
 from fairbet_auth_app.models import Profile
+from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 # Create your models here.
 
 class Order(models.Model):
@@ -36,6 +37,7 @@ class Order(models.Model):
 
     
 class Wallet(models.Model):
+    objects = BulkUpdateOrCreateQuerySet.as_manager()
     user = models.OneToOneField(Profile,on_delete=models.CASCADE,null=True)
     amount = models.FloatField(_("Balance"),default=0.0)
     created = models.DateTimeField(auto_now_add=True,null=True)

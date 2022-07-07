@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'django_extensions',
+    'debug_toolbar',
     #apps
     'fairbet_auth_app.apps.FairbetAppConfig',
     'payment.apps.PaymentConfig',
@@ -63,7 +64,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -171,7 +172,7 @@ RAZOR_KEY_ID = os.environ['RAZOR_KEY_ID']
 RAZOR_KEY_SECRET =  os.environ['RAZOR_KEY_SECRET']
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -200,8 +201,8 @@ SIMPLE_JWT = {
 }
 
 
-# NOTEBOOK_ARGUMENTS = [
-#     '--ip', '0.0.0.0',
-#     '--port', '8888',
-# ]
-# IPYTHON_KERNEL_DISPLAY_NAME = 'Django Kernel'
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
