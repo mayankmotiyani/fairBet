@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 from payment.models import (
     Wallet
 )
-
+from datetime import datetime, date
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,6 +79,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'password', 'password2', 'email','mobile_number','birth_date','gender','source')
 
     def validate(self, attrs):
+        today = date.today()
+        birthdate = datetime.strptime(str(attrs['birth_date']),"%d-%m-%Y")
+        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+
+        if age <= 18:
+            raise serializers.ValidationError({"birth_date": "Age should be 18 above!"})
+        return attrs
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         return attrs
