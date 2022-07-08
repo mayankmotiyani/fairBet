@@ -1,6 +1,9 @@
 from .models import Order, Wallet
 from rest_framework import serializers
 from datetime import datetime
+from fairbet_auth_app.models import (
+    Profile
+)
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -31,7 +34,7 @@ class WalletSerializer(serializers.ModelSerializer):
     
     def to_representation(self,obj):
         instance = super(WalletSerializer,self).to_representation(obj)
-        # instance['username'] = User.objects.get(id=instance)
+        instance['user']['username'] = Profile.objects.get(user_id=instance['user']['user']).user.username
         instance['user']['created'] = datetime.strptime(instance['user']['created'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
         instance['user']['updated'] = datetime.strptime(instance['user']['updated'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
 
