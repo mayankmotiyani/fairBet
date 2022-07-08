@@ -80,7 +80,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         today = date.today()
-        birthdate = datetime.strptime(str(attrs['birth_date']),"%d-%m-%Y")
+        birthdate = datetime.strptime(str(attrs['birth_date']),"%Y-%m-%d")
         age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
 
         if age <= 18:
