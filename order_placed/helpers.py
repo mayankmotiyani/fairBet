@@ -54,7 +54,7 @@ def handle_all_betting_(matchName,winningTeam):
     ).values(
         'total_amount'
     )
-
+ 
     betting_user_list = set(Betting.objects.filter(match = matchName,winning_team = winningTeam).values_list("user_id",flat=True))
     betting_user_list = list(betting_user_list)
     """ update wallet """

@@ -31,7 +31,6 @@ class WalletSerializer(serializers.ModelSerializer):
     
     def to_representation(self,obj):
         instance = super(WalletSerializer,self).to_representation(obj)
-        # 2022-06-29T14:38:15.161915+05:30
         instance['user']['created'] = datetime.strptime(instance['user']['created'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
         instance['user']['updated'] = datetime.strptime(instance['user']['updated'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
 
