@@ -40,6 +40,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             data['status'] = status.HTTP_200_OK
             data['refresh'] = str(refresh)
             data['access'] = str(refresh.access_token)
+            data['username'] = user_instance.username
             return data
         elif user is None:
             data = dict()

@@ -7,12 +7,15 @@ from django.db.models import F, Q, When, Value, Case, Sum, OuterRef, Subquery
 from payment.models import Wallet
 
 
-""" 
-    This function will automatic update loss or profit of each user on particular match.
-    and also update the wallet of each user 
-"""
+
 def handle_all_betting_(matchName,winningTeam):
-    """ will filter according to match_name and Case When Conditional Statement """
+    """ 
+        This function will automatic update loss or profit of each user on particular match.
+        and also update the wallet of each user 
+    """
+    """  
+        will filter according to match_name and Case When Conditional Statement 
+    """
 
     betting_instance = Betting.objects.filter(
         match = matchName
