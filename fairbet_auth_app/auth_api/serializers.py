@@ -92,7 +92,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         if not pass_regex1 and not pass_regex2:
             raise serializers.ValidationError({"password": "Invalid Password!"})
-        elif age <= 18:
+        elif age <= 18: 
             raise serializers.ValidationError({"birth_date": "Age should be 18 above!"})
         elif attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})

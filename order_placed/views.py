@@ -70,6 +70,7 @@ class BettingOrderAPI(APIView):
                 # wallet_instance.save()
                 context = {
                     "status":status.HTTP_201_CREATED,
+                    "success":True,
                     "response":"Successfully Placed Order!"
                 }
                 return Response(context,status = status.HTTP_201_CREATED)
@@ -98,6 +99,7 @@ class BettingOrderAPI(APIView):
         serializer = BettingSerializer(betting_instance,many=True)
         context = {
             "status" : status.HTTP_200_OK,
+            "success":True,
             "response":serializer.data
         }
         return Response(context,status = status.HTTP_200_OK)

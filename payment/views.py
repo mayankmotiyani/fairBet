@@ -143,7 +143,12 @@ class WalletAPI(APIView):
             get_logged_in_user_name = valid_data['username']
             instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
             serializer = WalletSerializer(instance)
-            return Response({"status":status.HTTP_200_OK,"data":serializer.data},status=status.HTTP_200_OK)
+            context = {
+                "status":status.HTTP_200_OK,
+                "success":True,
+                "data":serializer.data
+            }
+            return Response(context,status=status.HTTP_200_OK)
         except Exception as exception:
             context = {
                 "status":status.HTTP_400_BAD_REQUEST,
@@ -167,6 +172,7 @@ class OrderHistory(APIView):
                 serializer = OrderSerializer(instance,many=True)
                 context = {
                     "status":status.HTTP_200_OK,
+                    "success":True,
                     "data":serializer.data
                 }
                 return Response(context,status=status.HTTP_200_OK)
@@ -176,6 +182,7 @@ class OrderHistory(APIView):
                     serializer = OrderSerializer(instance,many=True)
                     context = {
                         "status":status.HTTP_200_OK,
+                        "success":True,
                         "data":serializer.data
                     }
                     return Response(context, status=status.HTTP_200_OK)
@@ -202,6 +209,7 @@ class RandomODDS(APIView):
         random_df['team2Lay'] = float("{:.2f}".format(random.uniform(1.0,3.0)))
         context = {
             "status":status.HTTP_200_OK,
+            "success":True,
             "response":random_df
         }
         return Response(context,status=status.HTTP_200_OK)
