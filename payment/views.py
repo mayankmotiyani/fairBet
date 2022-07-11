@@ -146,7 +146,7 @@ class WalletAPI(APIView):
             context = {
                 "status":status.HTTP_200_OK,
                 "success":True,
-                "data":serializer.data
+                "data":serializer.data 
             }
             return Response(context,status=status.HTTP_200_OK)
         except Exception as exception:

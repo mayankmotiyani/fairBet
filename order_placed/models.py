@@ -27,6 +27,7 @@ class Betting(models.Model):
     loss_profit = models.FloatField(
         _('lossProfit'),null=True,default=0.0)
     match = models.CharField(_("liveMatch"),max_length=100,null=True,blank=True,default="")
+    is_closed = models.BooleanField(_("isClosed"),default=False)
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,null=True)
 
