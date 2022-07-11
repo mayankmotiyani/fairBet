@@ -14,6 +14,10 @@ from payment.models import (
     Wallet
 )
 from datetime import datetime, date
+import re
+
+reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+passObj = re.compile(reg)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -82,8 +86,13 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         today = date.today()
         birthdate = datetime.strptime(str(attrs['birth_date']),"%Y-%m-%d")
-        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-        if age <= 18:
+        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))     
+        pass_regex1 = re.search(passObj, attrs['password'])
+        pass_regex2 = re.search(passObj, attrs['password2'])
+
+        if not pass_regex1 and not pass_regex2:
+            raise serializers.ValidationError({"password": "Invalid Password!"})
+        elif age <= 18:
             raise serializers.ValidationError({"birth_date": "Age should be 18 above!"})
         elif attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
