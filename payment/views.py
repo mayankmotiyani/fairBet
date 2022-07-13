@@ -22,6 +22,7 @@ import pandas as pd
 import numpy as np
 from .models import (
     Wallet,
+    Order
     )
 from .serializers import (
     WalletSerializer
@@ -34,8 +35,6 @@ from order_placed.models import (
 )
 
 from order_placed.helpers import handle_all_betting_
-
-
 
 class GetTransactionStatus(APIView):
     def get(self,request, *args, **kwargs):
@@ -54,6 +53,8 @@ class GetTransactionStatus(APIView):
 
 
 def home(request):
+    orders = Order.objects.all().update(transaction_status="Payment_Gateway To Wallet")
+    orders.save()
     # handle_all_betting_("England vs India","England")
     return render(request, 'payment/index.html')
 
@@ -185,7 +186,6 @@ class OrderHistory(APIView):
             get_logged_in_user_name = valid_data['username']
             if request.data:
                 get_json = request.data
-                print(get_json)
                 instance = Order.objects.filter(user_id=get_logged_in_user_profile.id,created__date__gte=get_json['from'],created__date__lte=get_json['to'],status=get_json['payment_status'],transaction_status__icontains=get_json['transaction_status'])
                 serializer = OrderSerializer(instance,many=True)
                 context = {
