@@ -9,13 +9,22 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"
-        depth = True
+        # depth = True
     
     def to_representation(self,obj):
         instance = super(OrderSerializer,self).to_representation(obj)
-        # instance['created'] = datetime.strptime(instance['created'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
-        # instance['updated'] = datetime.strptime(instance['updated'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
+        if instance['transaction_status'] == "Payment_Gateway to Wallet":
+            instance['from'] = instance['transaction_status'].split(" ")[0].replace("_"," ").upper()
+            instance['transfer_to'] = instance['transaction_status'].split(" ")[2].upper()
+        if instance['status'] == "Failed":
+            instance['comments'] = "Your transaction has failed due to timeout"
+        else:
+            instance['comments'] = ""
+        instance['request_date'] = datetime.strptime(instance['created'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p") 
+        instance['approved_date'] = datetime.strptime(instance['updated'],"%Y-%m-%dT%H:%M:%S.%f+05:30").strftime("%d-%m-%Y %I:%M %p")
         del instance['signature_id']
+        del instance['created']
+        del instance['updated']
         return instance
 
 

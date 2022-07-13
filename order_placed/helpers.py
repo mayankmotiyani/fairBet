@@ -9,16 +9,19 @@ from payment.models import Wallet
 
 
 def handle_all_betting_(matchName,winningTeam):
-    """ 
-        This function will automatic update loss or profit of each user on particular match.
-        and also update the wallet of each user 
+    """
+        first we need to update the winning_team
     """
     """  
-        will filter according to match_name and Case When Conditional Statement 
+        will filter according to match_name and Case When Conditional Statement to update the loss_profit
+        This function will automatic update loss or profit of each user on particular match.
+        and also update the wallet of each user.
     """
-
+    Betting.objects.filter(match=matchName).update(winning_team=winningTeam,is_closed=True)
     betting_instance = Betting.objects.filter(
-        match = matchName
+        match = matchName,
+        winning_team = winningTeam,
+        is_closed=True
     ).update(
         loss_profit = Case(
             When(
@@ -45,14 +48,13 @@ def handle_all_betting_(matchName,winningTeam):
             )
         )
 
-    
     subquery = Betting.objects.filter(
         user_id=OuterRef('user_id'),
         match = matchName,
         winning_team = winningTeam
     ).values(
         'user__id'
-    ).annotate(
+    ).annotate( 
         total_amount=Sum('loss_profit')
     ).values(
         'total_amount'

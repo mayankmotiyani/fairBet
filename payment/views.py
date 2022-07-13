@@ -36,6 +36,23 @@ from order_placed.models import (
 from order_placed.helpers import handle_all_betting_
 
 
+
+class GetTransactionStatus(APIView):
+    def get(self,request, *args, **kwargs):
+        get_transaction_status = [value for key,value in vars(TransactionStatus).items() if key.isupper()]
+        get_payment_status = [value for key,value in vars(PaymentStatus).items() if key.isupper()]
+        status_dict = {}
+        status_dict['transaction_status'] = get_transaction_status
+        status_dict['payment_status'] = get_payment_status
+
+        context = {
+            "status":status.HTTP_200_OK,
+            "response":status_dict
+        }
+        return JsonResponse(context,status=status.HTTP_200_OK)
+        
+
+
 def home(request):
     # handle_all_betting_("England vs India","England")
     return render(request, 'payment/index.html')
@@ -99,7 +116,7 @@ class CallbackView(APIView):
                 payment_object.payment_id = response['razorpay_payment_id']
                 payment_object.signature_id = response['razorpay_signature']
                 payment_object.status = PaymentStatus.SUCCESS
-                payment_object.transaction_status = TransactionStatus.B_TO_W
+                payment_object.transaction_status = TransactionStatus.P_TO_W
                 payment_object.save()
                 """ Here We will create wallet instance after payment getting successfully """
                 if Wallet.objects.filter(user_id=get_logged_in_user_profile.id).exists():
@@ -168,12 +185,13 @@ class OrderHistory(APIView):
             get_logged_in_user_name = valid_data['username']
             if request.data:
                 get_json = request.data
-                instance = Order.objects.filter(user_id=get_logged_in_user_profile.id,created__date__gte=get_json['from'],created__date__lte=get_json['to'],status=get_json['payment_status'])
+                print(get_json)
+                instance = Order.objects.filter(user_id=get_logged_in_user_profile.id,created__date__gte=get_json['from'],created__date__lte=get_json['to'],status=get_json['payment_status'],transaction_status__icontains=get_json['transaction_status'])
                 serializer = OrderSerializer(instance,many=True)
                 context = {
                     "status":status.HTTP_200_OK,
                     "success":True,
-                    "data":serializer.data
+                    "response":serializer.data
                 }
                 return Response(context,status=status.HTTP_200_OK)
             else:
@@ -183,13 +201,13 @@ class OrderHistory(APIView):
                     context = {
                         "status":status.HTTP_200_OK,
                         "success":True,
-                        "data":serializer.data
+                        "response":serializer.data
                     }
                     return Response(context, status=status.HTTP_200_OK)
                 except Exception as exception:
                     context = {
                         "status":status.HTTP_400_BAD_REQUEST,
-                        "data":str(exception)
+                        "response":str(exception)
                     }
                     return Response(context, status=status.HTTP_400_BAD_REQUEST)
         except Exception as exception:

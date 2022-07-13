@@ -5,6 +5,7 @@ from .views import (
     WalletAPI,
     OrderHistory,
     RandomODDS,
+    GetTransactionStatus,
     home
 )
 urlpatterns = [
@@ -13,5 +14,6 @@ urlpatterns = [
     path('razorPay/',RazorPayOrderForm.as_view(),name='razorpay'),
     path('get_wallet/',WalletAPI.as_view(), name="get-wallet"),
     path('get_history/',OrderHistory.as_view(),name='get-history'),
-    path('get_random_odds/',RandomODDS.as_view(),name='get-random-odds')
+    path('get_random_odds/',RandomODDS.as_view(),name='get-random-odds'),
+    path('get_transaction_status/',GetTransactionStatus.as_view(),name='transaction-status')
 ]
