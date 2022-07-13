@@ -66,6 +66,7 @@ class BettingOrderAPI(APIView):
         except Exception as exception:
             context = {
                 "status":status.HTTP_401_UNAUTHORIZED,
+                "success":False,
                 "response":"Given token not valid for any token type",
                 "exception":str(exception)
             }
@@ -77,6 +78,7 @@ class BettingOrderAPI(APIView):
             if get_json['placeAmount'] <= 0:
                 context = {
                     "status":status.HTTP_400_BAD_REQUEST,
+                    "success":False,
                     "response":"stake should not be less than zero"
                 }
                 return Response(context,status=status.HTTP_400_BAD_REQUEST)
@@ -91,10 +93,10 @@ class BettingOrderAPI(APIView):
                     match = get_json['liveMatch']
                 )
                 betting_instance.save()
-                # """ taking wallet instance """
-                # wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
-                # wallet_instance.amount -= betting_instance.amount
-                # wallet_instance.save()
+                """ taking wallet instance """
+                wallet_instance = Wallet.objects.get(user_id=get_logged_in_user_profile.id)
+                wallet_instance.amount -= betting_instance.amount
+                wallet_instance.save()
                 context = {
                     "status":status.HTTP_201_CREATED,
                     "success":True,
@@ -104,6 +106,7 @@ class BettingOrderAPI(APIView):
         except Exception as exception:
             context = {
                 "status":status.HTTP_400_BAD_REQUEST,
+                "success":False,
                 "response":str(exception)
             }
             return Response(context,status = status.HTTP_400_BAD_REQUEST)
@@ -118,6 +121,7 @@ class BettingOrderAPI(APIView):
         except Exception as exception:
             context = {
                 "status":status.HTTP_401_UNAUTHORIZED,
+                "success":False,
                 "response":"Given token not valid for any token type",
                 "exception":str(exception)
             }

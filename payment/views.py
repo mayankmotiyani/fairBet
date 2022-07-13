@@ -46,6 +46,7 @@ class GetTransactionStatus(APIView):
 
         context = {
             "status":status.HTTP_200_OK,
+            "success":True,
             "response":status_dict
         }
         return JsonResponse(context,status=status.HTTP_200_OK)
@@ -70,6 +71,7 @@ class RazorPayOrderForm(APIView):
         except Exception as exception:
             context = {
                 "status":status.HTTP_401_UNAUTHORIZED,
+                "success":False,
                 "response":"Given token not valid for any token type",
                 "exception":str(exception)
             }
@@ -170,6 +172,7 @@ class WalletAPI(APIView):
         except Exception as exception:
             context = {
                 "status":status.HTTP_400_BAD_REQUEST,
+                "success":False,
                 "response": str(exception)
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
@@ -207,12 +210,14 @@ class OrderHistory(APIView):
                 except Exception as exception:
                     context = {
                         "status":status.HTTP_400_BAD_REQUEST,
+                        "success":False,
                         "response":str(exception)
                     }
                     return Response(context, status=status.HTTP_400_BAD_REQUEST)
         except Exception as exception:
             context = {
                 "status":status.HTTP_400_BAD_REQUEST,
+                "success":False,
                 "response": str(exception)
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
